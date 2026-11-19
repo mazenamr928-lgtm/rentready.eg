@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>RENTREADY · Ready to rent</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap">
+  <style>
+    :root {
+      --bg: #F6F9FB;
+      --fg: #0B1F3A;
+      --mut: #4F6D88;
+      --card: #fff;
+      --line: #D5E0E8;
+      --t: #14A3A0;
+      --td: #0B7F88;
+      --g: #F5A524;
+      --n: #0B1F3A;
+      --on: #fff;
+      color-scheme: light;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0A1522;
+        --fg: #EAF1F6;
+        --mut: #9DB4C6;
+        --card: #10253B;
+        --line: #1F3D5A;
+        --td: #5FD0CC;
+        --n: #0E2A47;
+        color-scheme: dark;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #0A1522;
+      --fg: #EAF1F6;
+      --mut: #9DB4C6;
+      --card: #10253B;
+      --line: #1F3D5A;
+      --td: #5FD0CC;
+      --n: #0E2A47;
+      color-scheme: dark;
+    }
+
+    html {
+      scroll-padding-top: calc(64px + env(safe-area-inset-top, 0px));
+      scroll-behavior: smooth;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font: 400 16px/1.6 Cairo, system-ui, sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0 0 auto;
+      height: env(safe-area-inset-top, 0px);
+      background: var(--bg);
+      z-index: 10;
+    }
+
+    .w {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header {
+      position: sticky;
+      top: env(safe-area-inset-top, 0px);
+      z-index: 11;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+    }
+
+    header .w {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      height: 60px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 18px;
+      margin-inline-end: auto;
+    }
+
+    nav {
+      display: flex;
+      gap: 18px;
+      font-size: 14px;
+    }
+
+    nav a {
+      color: var(--mut);
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      color: var(--td);
+    }
+
+    @media (max-width: 720px) {
+      nav {
+        display: none;
+      }
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+      color: inherit;
+    }
+
+    .btn {
+      background: var(--g);
+      color: #0B1F3A;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn.o {
+      background: none;
+      border: 1px solid var(--line);
+      color: var(--fg);
+      padding: 6px 14px;
+      font-size: 14px;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--g);
+      outline-offset: 2px;
+    }
+
+    .hero {
+      background: var(--n);
+      color: #fff;
+      padding: 44px 0 52px;
+    }
+
+    .hero .w {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 36px;
+      align-items: center;
+    }
+
+    @media (max-width: 820px) {
+      .hero .w {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .tag {
+      display: inline-block;
+      background: #14A3A022;
+      border: 1px solid #14A3A0;
+      border-radius: 99px;
+      padding: 2px 12px;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.15;
+      margin: 0 0 14px;
+      font-weight: 800;
+    }
+
+    .hero p {
+      color: #C9DAE7;
+      margin: 0 0 22px;
+      max-width: 46ch;
+    }
+
+    .est {
+      background: var(--card);
+      color: var(--fg);
+      border-radius: 16px;
+      padding: 22px;
+    }
+
+    .est h2 {
+      font-size: 20px;
+      margin: 0 0 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      color: var(--mut);
+      margin: 12px 0 4px;
+    }
+
+    input[type=range] {
+      width: 100%;
+      accent-color: var(--t);
+    }
+
+    select, input[type=text], input[type=email], textarea {
+      width: 100%;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--bg);
+    }
+
+    .ck {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin: 4px 0;
+      font-size: 15px;
+      color: var(--fg);
+    }
+
+    .res {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 10px;
+      background: var(--bg);
+      border-inline-start: 5px solid var(--g);
+    }
+
+    .res b {
+      font-size: 26px;
+      display: block;
+      line-height: 1.2;
+    }
+
+    .res small {
+      color: var(--mut);
+    }
+
+    section {
+      padding: 54px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    h2 {
+      font-size: 28px;
+      margin: 0 0 8px;
+      line-height: 1.25;
+    }
+
+    .lead {
+      color: var(--mut);
+      max-width: 60ch;
+      margin: 0 0 24px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: 14px;
+    }
+
+    .hub {
+      background: var(--t);
+      color: #04262A;
+      font-weight: 800;
+      border-color: var(--t);
+    }
+
+    .row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .row i {
+      font-style: normal;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #14A3A01F;
+      color: var(--td);
+      flex: none;
+    }
+
+    .row i svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .row div {
+      flex: 1;
+    }
+
+    .row b {
+      display: block;
+    }
+
+    .row span {
+      color: var(--mut);
+      font-size: 14px;
+    }
+
+    .row em {
+      font-style: normal;
+      font-weight: 600;
+      color: var(--td);
+      white-space: nowrap;
+    }
+
+    ol.st {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      counter-reset: s;
+    }
+
+    ol.st li {
+      counter-increment: s;
+      background: var(--card);
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    ol.st li::before {
+      content: counter(s);
+      background: var(--g);
+      color: #0B1F3A;
+      font-weight: 800;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      flex: none;
+    }
+
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    @media (max-width: 820px) {
+      .two {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .drop {
+      border: 2px dashed var(--line);
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+      background: var(--card);
+    }
+
+    .drop img {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .demo {
+      margin-top: 12px;
+      background: var(--card);
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 15px;
+    }
+
+    .demo .n {
+      color: var(--mut);
+      font-size: 13px;
+    }
+
+    .ba {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 5/3;
+      background: #ddd;
+    }
+
+    .ba svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .ba .af {
+      clip-path: inset(0 0 0 50%);
+    }
+
+    .cert {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .cert h3 {
+      margin: 0 0 4px;
+    }
+
+    .cert li {
+      margin: 4px 0;
+    }
+
+    .cert ul {
+      padding-inline-start: 20px;
+      margin: 10px 0;
+    }
+
+    .stat {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .stat div {
+      background: var(--card);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .stat b {
+      font-size: 26px;
+      color: var(--td);
+      display: block;
+    }
+
+    .ok {
+      display: none;
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 10px;
+      background: var(--card);
+      border-inline-start: 5px solid var(--t);
+    }
+
+    .hc {
+      padding: 7px 16px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      .hc {
+        display: none;
+      }
+    }
+
+    .trust {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .trust .w {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 26px;
+      padding: 16px 20px;
+      font-size: 14px;
+      color: var(--mut);
+    }
+
+    .trust span::before {
+      content: "✓";
+      color: var(--t);
+      font-weight: 800;
+      margin-inline-end: 8px;
+    }
+
+    details {
+      border-bottom: 1px solid var(--line);
+      padding: 14px 0;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    details p {
+      color: var(--mut);
+      margin: 8px 0 0;
+      max-width: 62ch;
+    }
+
+    footer {
+      background: var(--n);
+      color: #C9DAE7;
+      padding: 36px 0 16px;
+      font-size: 14px;
+      line-height: 1.9;
+    }
+
+    .fg {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 720px) {
+      .fg {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    footer a {
+      color: #C9DAE7;
+      text-decoration: none;
+    }
+
+    .fl {
+      font-size: 20px;
+    }
+
+    .cp {
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px solid #ffffff22;
+      font-size: 13px;
+    }
+
+    footer b {
+      color: #fff;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="w">
+      <div class="logo">
+        <svg width="28" height="28" viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M50 6 96 44H84V92H16V44H4Z" fill="#14A3A0" />
+          <path d="M32 58 45 71 69 44" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        RENTREADY
+      </div>
+      <nav>
+        <a href="#est" data-ar="مقدّر التكلفة">Estimator</a>
+        <a href="#scan" data-ar="الماسح الذكي">Scanner</a>
+        <a href="#stage" data-ar="التنسيق الرقمي">Staging</a>
+        <a href="#faq" data-ar="أسئلة شائعة">FAQ</a>
+        <a href="#req" data-ar="اطلب خدمة">Request</a>
+      </nav>
+      <a class="btn hc" href="#req" data-ar="احصل على عرض سعر">Get a quote</a>
+      <button class="btn o" id="lang" type="button">العربية</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="w">
+      <div>
+        <span class="tag" data-ar="تجهيز الشقق للإيجار من الألف إلى الياء">Complete apartment preparation for rent</span>
+        <h1 data-ar="منصة واحدة. كل عقار. جاهز للإيجار.">One platform. Every property. Ready to rent.</h1>
+        <p data-ar="نعاين شقتك الفاضية، نسعّرها، وننسّق التنظيف والصيانة والتصوير وتجهيز الإعلان، ونراجع الجودة. جهة واحدة تتصل بها.">We assess your vacant apartment, quote it, and coordinate cleaning, maintenance, photography and listing prep, then check the quality. One contact, one quotation, one report.</p>
+        <a class="btn" href="#req" data-ar="اطلب خدمة">Request a service</a>
+      </div>
+
+      <form class="est" id="est" onsubmit="return false">
+        <h2 data-ar="قدّر تكلفة التجهيز">Estimate your preparation cost</h2>
+        <label for="A"><span data-ar="مساحة الشقة">Apartment size</span>: <b id="av">120</b> m²</label>
+        <input id="A" type="range" min="60" max="220" step="5" value="120">
+
+        <label for="C" data-ar="حالة الشقة">Condition</label>
+        <select id="C">
+          <option value="0" data-ar="تحتاج لمسات خفيفة">Light refresh</option>
+          <option value="1" selected data-ar="حالة عادية">Standard</option>
+          <option value="2" data-ar="تحتاج أعمال أكثر">Needs more work</option>
+        </select>
+
+        <label data-ar="الخدمات">Services</label>
+        <div id="sv"></div>
+
+        <div class="res" aria-live="polite">
+          <small data-ar="تكلفة تقريبية (بدون ضريبة القيمة المضافة)">Indicative cost (excl. VAT)</small>
+          <b id="out"></b>
+          <small id="note"></small>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="trust">
+    <div class="w">
+      <span data-ar="جهة اتصال واحدة">One point of contact</span>
+      <span data-ar="عرض سعر مكتوب">Written quotation</span>
+      <span data-ar="مزوّدون تمت مراجعتهم">Vetted providers</span>
+      <span data-ar="فحص جودة قبل التسليم">Quality check before handover</span>
+      <span data-ar="شهادة إنجاز رقمية">Digital completion certificate</span>
+    </div>
+  </div>
+
+  <section>
+    <div class="w">
+      <h2 data-ar="شقة واحدة، خمسة مزوّدين">One apartment, five providers</h2>
+      <p class="lead" data-ar="المالك اليوم يدور ويتابع كل واحد لوحده. مع RENTREADY يكلّم جهة واحدة فقط.">Owners today find and chase each one separately. With RENTREADY they talk to one team.</p>
+      <div class="chips">
+        <span class="chip" data-ar="معاين">Inspector</span>
+        <span class="chip" data-ar="عامل نظافة">Cleaner</span>
+        <span class="chip" data-ar="فني صيانة">Technician</span>
+        <span class="chip" data-ar="مصوّر">Photographer</span>
+        <span class="chip" data-ar="كاتب إعلان">Listing writer</span>
+        <span class="chip hub">→ RENTREADY</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="w">
+      <h2 data-ar="الخدمات">What we deliver</h2>
+      <p class="lead" data-ar="تدفع فقط مقابل ما تحتاجه شقتك. المتوسطات لشقة 120 م².">You pay only for what your apartment needs. Averages for a 120 m² apartment.</p>
+      <div id="svc"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="w">
+      <h2 data-ar="من الطلب إلى تقرير الإنجاز">From request to completion report</h2>
+      <p class="lead"></p>
+      <ol class="st" id="st"></ol>
+    </div>
+  </section>
+
+  <section id="scan">
+    <div class="w two">
+      <div>
+        <h2 data-ar="الماسح الذكي للشقة">AI property scanner</h2>
+        <p class="lead" data-ar="ارفع صورة لغرفة واحصل على تقييم مبدئي. هذا عرض تجريبي بنتائج نموذجية، وليس تحليلاً حقيقياً بالذكاء الاصطناعي. الصورة تبقى على جهازك.">Upload a room photo for an initial assessment. This is a prototype demo with sample results, not a real AI analysis. Your photo stays on your device.</p>
+      </div>
+      <div>
+        <div class="drop">
+          <label for="f" style="margin:0;color:var(--fg)" data-ar="اختر صورة">Choose a photo</label>
+          <input id="f" type="file" accept="image/*">
+          <div id="pv"></div>
+        </div>
+        <div class="demo" id="dm" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="stage">
+    <div class="w two">
+      <div>
+        <h2 data-ar="التنسيق الرقمي للغرف الفاضية">Virtual staging</h2>
+        <p class="lead" data-ar="حرّك الشريط لترى غرفة فاضية وهي مفروشة رقمياً. الصور توضيحية وتُعرض بهذا الوصف في الإعلان. الإضافة بحوالي 2,000 جنيه للإعلان.">Drag to see an empty room with digital furniture. Staged images are labeled illustrative in the listing. The add-on is about EGP 2,000 per listing.</p>
+        <input id="sl" type="range" min="0" max="100" value="50" aria-label="Before and after" style="width:100%">
+      </div>
+      <div class="ba" id="ba"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="w two">
+      <div>
+        <h2 data-ar="شهادة RENTREADY">The RENTREADY certificate</h2>
+        <p class="lead" data-ar="تقرير رقمي بالمهام المنفذة وصور قبل وبعد. هذا نموذج توضيحي وليس ضماناً قانونياً لحالة العقار.">A digital report of the work done with before-and-after photos. This is a sample, not a legal guarantee of the property’s condition.</p>
+      </div>
+      <div class="cert">
+        <h3 data-ar="شهادة الإنجاز · نموذج">Completion certificate · sample</h3>
+        <small style="color:var(--mut)">No. RR-0001 · New Cairo · 120 m²</small>
+        <ul>
+          <li data-ar="✔ فحص وتحديد النطاق">✔ Inspection and scope</li>
+          <li data-ar="✔ تنظيف عميق">✔ Deep cleaning</li>
+          <li data-ar="✔ صيانة بسيطة (3 بنود)">✔ Minor maintenance (3 items)</li>
+          <li data-ar="✔ تصوير وتجهيز الإعلان">✔ Photography and listing</li>
+        </ul>
+        <small data-ar="فحص الجودة: اجتاز القائمة · التقييم 4.6/5 (مثال)">Quality check: checklist passed · rating 4.6/5 (example)</small>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="w">
+      <h2 data-ar="أسئلة شائعة">Frequently asked questions</h2>
+      <p class="lead"></p>
+      <details>
+        <summary data-ar="كيف يُحسب السعر؟">How is the price decided?</summary>
+        <p data-ar="بعد المعاينة نعدّ عرض سعر مكتوباً حسب مساحة الشقة وحالتها والخدمات المطلوبة. التقدير على هذه الصفحة استرشادي فقط.">After an inspection we prepare a written quotation based on size, condition and the services you pick. The estimate on this page is indicative only.</p>
+      </details>
+      <details>
+        <summary data-ar="هل أدفع مقدماً؟">Do I pay in advance?</summary>
+        <p data-ar="تدفع 50% عند الموافقة على العرض و50% عند التسليم.">You pay 50% when you approve the quotation and 50% on delivery.</p>
+      </details>
+      <details>
+        <summary data-ar="ما المناطق التي تخدمونها؟">Which areas do you serve?</summary>
+        <p data-ar="نبدأ في مناطق مختارة من القاهرة والجيزة: التجمع، الشيخ زايد وأكتوبر، المعادي، مدينة نصر ومصر الجديدة، المهندسين والدقي.">We start in selected districts of Cairo and Giza: New Cairo, Sheikh Zayed / 6th of October, Maadi, Nasr City / Heliopolis and Mohandessin / Dokki.</p>
+      </details>
+      <details>
+        <summary data-ar="هل يغني الماسح الذكي عن المعاينة؟">Does the scanner replace an inspection?</summary>
+        <p data-ar="لا. الماسح يعطي تقييماً مبدئياً من الصور فقط، والمعاينة الميدانية تؤكد النطاق والسلامة.">No. The scanner gives an initial view from photos only; the on-site inspection confirms scope and safety.</p>
+      </details>
+      <details>
+        <summary data-ar="ماذا لو احتاجت الشقة ترميماً كبيراً؟">What if the apartment needs major repairs?</summary>
+        <p data-ar="الإصلاحات الكبيرة والتجديد تُسعَّر بشكل منفصل وبموافقتك قبل أي تنفيذ.">Major repairs and renovation are quoted separately and need your approval before any work starts.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="req">
+    <div class="w two">
+      <div>
+        <h2 data-ar="اطلب خدمة">Request a service</h2>
+        <p class="lead" data-ar="أخبرنا عن شقتك وسنرجع إليك بعرض سعر. هذا نموذج تجريبي: لا يُرسَل أي شيء.">Tell us about your apartment and we will reply with a quotation. This is a prototype: nothing is sent.</p>
+      </div>
+      <form id="fm">
+        <label for="nm" data-ar="الاسم">Name</label>
+        <input id="nm" type="text" required>
+
+        <label for="ct" data-ar="الهاتف أو البريد">Phone or email</label>
+        <input id="ct" type="text" required>
+
+        <label for="ds" data-ar="المنطقة">District</label>
+        <select id="ds">
+          <option>New Cairo</option>
+          <option>Sheikh Zayed / 6th of October</option>
+          <option>Maadi</option>
+          <option>Nasr City / Heliopolis</option>
+          <option>Mohandessin / Dokki</option>
+          <option data-ar="أخرى">Other</option>
+        </select>
+
+        <label for="ms" data-ar="ملاحظات">Notes</label>
+        <textarea id="ms" rows="3"></textarea>
+
+        <p><button class="btn" type="submit" data-ar="إرسال الطلب">Send request</button></p>
+        <div class="ok" id="ok" role="status" data-ar="تم استلام طلبك (نموذج تجريبي، لم يُرسَل شيء). سنتواصل خلال يوم عمل.">Request received (prototype: nothing was sent). We would reply within one working day.</div>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div class="w fg">
+      <div>
+        <b class="fl">RENTREADY</b><br>
+        <span data-ar="منصة واحدة. كل عقار. جاهز للإيجار.">One platform. Every property. Ready to rent.</span>
+      </div>
+      <div>
+        <b data-ar="الخدمات">Services</b><br>
+        <a href="#est" data-ar="مقدّر التكلفة">Cost estimator</a><br>
+        <a href="#scan" data-ar="الماسح الذكي">Scanner</a><br>
+        <a href="#stage" data-ar="التنسيق الرقمي">Virtual staging</a>
+      </div>
+      <div>
+        <b data-ar="تواصل معنا">Contact</b><br>
+        +20 10 0000 0000<br>
+        hello@rentready.example<br>
+        <span data-ar="القاهرة والجيزة">Cairo &amp; Giza</span>
+      </div>
+    </div>
+    <div class="w cp">© 2026 RENTREADY</div>
+  </footer>
+
+  <script>
+    const S = [
+      ["<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m20 20-3.5-3.5\"/></svg>", "Assessment & coordination", "المعاينة والتنسيق", "Inspection, scope, quotation, report", "معاينة وتحديد النطاق وعرض السعر والتقرير", 1625],
+      ["<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z\"/><path d=\"M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z\"/></svg>", "Deep cleaning", "تنظيف عميق", "Kitchens, bathrooms, windows, post-work", "مطابخ وحمّامات وشبابيك وتنظيف ما بعد الأعمال", 3792],
+      ["<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14.5 5.5a4 4 0 0 1 5 5l-9 9a2.1 2.1 0 0 1-3-3z\"/></svg>", "Minor maintenance", "صيانة بسيطة", "Plumbing, electrical, locks, touch-ups", "سباكة وكهرباء وكوالين وترميمات بسيطة", 4875],
+      ["<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 8h3l2-3h6l2 3h3v11H4z\"/><circle cx=\"12\" cy=\"13\" r=\"3.5\"/></svg>", "Professional photography", "تصوير احترافي", "Edited photo set for rental portals", "صور معدّلة لمنصات الإيجار", 1365],
+      ["<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 3h8l4 4v14H6z\"/><path d=\"M9 12h6M9 16h6\"/></svg>", "Listing preparation", "تجهيز الإعلان", "Listing text, posting help, light styling", "نص الإعلان ودعم النشر وتجميل بسيط", 1343]
+    ];
+
+    const ST = [
+      ["Request", "الطلب"],
+      ["Assessment", "المعاينة"],
+      ["Service selection", "اختيار الخدمات"],
+      ["Quotation", "عرض السعر"],
+      ["Approval + 50% advance", "الموافقة ودفعة 50%"],
+      ["Execution", "التنفيذ"],
+      ["Quality check", "فحص الجودة"],
+      ["Delivery + certificate", "التسليم والشهادة"]
+    ];
+
+    const R = [
+      ["Walls: minor marks. Floor: good. Kitchen: needs deep clean.", "Suggested: deep cleaning + touch-up paint.", "الجدران: علامات بسيطة. الأرضية: جيدة. المطبخ: يحتاج تنظيفاً عميقاً.", "المقترح: تنظيف عميق ودهان جزئي."],
+      ["Walls: good. Bathroom: silicone and tap check.", "Suggested: cleaning + minor plumbing.", "الجدران: جيدة. الحمّام: يحتاج فحص السيليكون والحنفيات.", "المقترح: تنظيف وسباكة بسيطة."],
+      ["Room is in good shape. Lighting is dim.", "Suggested: photography + listing prep.", "الغرفة بحالة جيدة. الإضاءة خافتة.", "المقترح: تصوير وتجهيز الإعلان."]
+    ];
+
+    const $ = s => document.querySelector(s);
+    const ar = () => document.documentElement.lang === "ar";
+    const n = v => Math.round(v).toLocaleString("en-US");
+
+    const base = '<rect width="500" height="300" fill="#E4E8EB"/><rect y="205" width="500" height="95" fill="#B7B2A8"/><rect x="330" y="40" width="130" height="110" fill="#BFE3F0" stroke="#fff" stroke-width="7"/>';
+    const stg = '<ellipse cx="170" cy="268" rx="150" ry="24" fill="#7AC9C6"/><rect x="50" y="160" width="190" height="70" rx="16" fill="#14A3A0"/><rect x="66" y="125" width="160" height="46" rx="14" fill="#0E6F78"/><rect x="40" y="175" width="30" height="62" rx="12" fill="#0E6F78"/><rect x="222" y="175" width="30" height="62" rx="12" fill="#0E6F78"/><rect x="80" y="60" width="90" height="56" fill="#fff" stroke="#0B1F3A" stroke-width="5"/><rect x="290" y="200" width="26" height="34" fill="#0B1F3A"/><circle cx="303" cy="182" r="24" fill="#2E9E6B"/>';
+
+    $("#ba").innerHTML = '<svg viewBox="0 0 500 300" role="img" aria-label="Empty room">' + base + '</svg><svg class="af" id="af" viewBox="0 0 500 300" role="img" aria-label="Staged room">' + base.replace("#E4E8EB", "#F3EFE8") + stg + '</svg>';
+    $("#sl").oninput = e => $("#af").style.clipPath = "inset(0 0 0 " + e.target.value + "%)";
+
+    const K = [];
+
+    function paint() {
+      const a = ar();
+      $("#sv").innerHTML = "";
+      S.forEach((s, i) => {
+        const l = document.createElement("label");
+        l.className = "ck";
+        l.innerHTML = '<input type="checkbox" ' + (i ? (K[i] === false ? "" : "checked") : "checked disabled") + ' data-i="' + i + '"> ' + s[a ? 2 : 1];
+        l.querySelector("input").onchange = e => {
+          K[i] = e.target.checked;
+          calc();
+        };
+        $("#sv").append(l);
+      });
+
+      const vs = document.createElement("label");
+      vs.className = "ck";
+      vs.innerHTML = '<input type="checkbox" id="vs" ' + (K.vs ? "checked" : "") + '> ' + (a ? "التنسيق الرقمي (+2,000 جنيه)" : "Virtual staging (+ EGP 2,000)");
+      vs.querySelector("input").onchange = e => {
+        K.vs = e.target.checked;
+        calc();
+      };
+      $("#sv").append(vs);
+
+      $("#svc").innerHTML = S.map(s => '<div class="row"><i>' + s[0] + '</i><div><b>' + s[a ? 2 : 1] + '</b><span>' + s[a ? 4 : 3] + '</span></div><em>≈ ' + (a ? "" : "EGP ") + n(s[5]) + (a ? " جنيه" : "") + '</em></div>').join("");
+      $("#st").innerHTML = ST.map(s => "<li>" + s[a ? 1 : 0] + "</li>").join("");
+      calc();
+    }
+
+    function calc() {
+      const a = +$("#A").value, c = +$("#C").value, A = ar();
+      $("#av").textContent = a;
+      let t = 0;
+      S.forEach((s, i) => {
+        if (i && K[i] === false) return;
+        let p = s[5];
+        if (i == 1) p *= (.4 + .6 * a / 120) * [.85, 1, 1.25][c];
+        if (i == 2) p *= [.5, 1, 1.8][c];
+        if (i == 3) p *= .8 + .2 * a / 120;
+        t += p;
+      });
+      const r = x => Math.round(x / 50) * 50;
+      $("#out").textContent = (A ? "" : "EGP ") + n(r(t * .85)) + " – " + n(r(t * 1.15)) + (A ? " جنيه" : "");
+      $("#note").textContent = (K.vs ? (A ? "+ 2,000 جنيه للتنسيق الرقمي. " : "+ EGP 2,000 virtual staging. ") : "") + (A ? "السعر النهائي بعد المعاينة وعرض السعر المخصص." : "Final price comes from a customized quotation after inspection.");
+    }
+
+    $("#A").oninput = calc;
+    $("#C").onchange = calc;
+
+    $("#f").onchange = e => {
+      const f = e.target.files[0];
+      if (!f) return;
+      $("#pv").innerHTML = "";
+      const im = new Image();
+      im.alt = "";
+      im.src = URL.createObjectURL(f);
+      $("#pv").append(im);
+      const d = $("#dm");
+      d.hidden = false;
+      d.textContent = "…";
+      setTimeout(() => {
+        const r = R[f.size % 3], a = ar();
+        d.innerHTML = (a ? r[2] : r[0]) + "<br><b>" + (a ? r[3] : r[1]) + '</b><div class="n">' + (a ? "نتيجة تجريبية نموذجية، وليست تحليلاً حقيقياً. لا تغني عن المعاينة." : "Sample prototype result, not a real analysis. Does not replace an on-site inspection.") + "</div>";
+      }, 900);
+    };
+
+    $("#fm").onsubmit = e => {
+      e.preventDefault();
+      $("#ok").style.display = "block";
+      e.target.reset();
+    };
+
+    function lang(l) {
+      document.documentElement.lang = l;
+      document.documentElement.dir = l === "ar" ? "rtl" : "ltr";
+      document.querySelectorAll("[data-ar]").forEach(el => {
+        if (!el.dataset.en) el.dataset.en = el.innerHTML;
+        el.innerHTML = l === "ar" ? el.dataset.ar : el.dataset.en;
+      });
+      $("#lang").textContent = l === "ar" ? "English" : "العربية";
+      paint();
+      try {
+        localStorage.setItem("rrlang", l);
+      } catch (e) {}
+    }
+
+    $("#lang").onclick = () => lang(ar() ? "en" : "ar");
+    let sv = "en";
+    try {
+      sv = localStorage.getItem("rrlang") || "en";
+    } catch (e) {}
+    document.querySelectorAll("[data-ar]").forEach(el => el.dataset.en = el.innerHTML);
+    if (sv === "ar") lang("ar");
+    else paint();
+  </script>
+</body>
+</html>
